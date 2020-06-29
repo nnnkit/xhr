@@ -5,20 +5,21 @@ let img = document.querySelector(".img");
 let url =
   "https://api.unsplash.com/photos/random/?client_id=12f3e03998534cb395d67570692b1ea866712ca052c0188109c880ba535565b1";
 
-function image() {
-  let xhr = new XMLHttpRequest();
+axios(url)
+  .then((data) => createUI(data))
+  .then(() => alert("ui created"))
+  .catch((err) => console.error(err));
 
-  xhr.open("GET", url);
-  xhr.onload = function () {
-    createUI(JSON.parse(xhr.response));
-  };
-  xhr.send();
-
-  function createUI(imageInfo) {
-    img.src = imageInfo.urls.small;
-  }
+function createUI(imageInfo) {
+  img.src = imageInfo.urls.small;
+  // console.log(imageInfo.urls);
 }
-image();
+
+function axios(url) {
+  return fetch(url).then((res) => {
+    return res.json();
+  });
+}
 
 // main("react");
 
@@ -58,3 +59,18 @@ image();
 // }
 
 // input.addEventListener("keyup", handleKeyUp);
+
+function fetchMe(url) {
+  return new Promise((res, rej) => {
+    let xhr = new XMLHttpRequest();
+
+    xhr.open("GET", url);
+    xhr.onload = function () {
+      res(JSON.parse(xhr.response));
+    };
+    xhr.onerror = function () {
+      rej("Something went wrong!❌");
+    };
+    xhr.send();
+  });
+}
